@@ -1,0 +1,20 @@
+[package]
+name = "onuron-terminal"
+version = "1.0.0"
+description = "অণুরণ ওএস-এর অফিসিয়াল নীলাং ইন্টারঅ্যাক্টিভ টার্মিনাল অ্যাপ (Onuron OS Terminal App)"
+author = "Joysriram Sarkar <joy@onuron.org>"
+license = "MIT"
+entry = "src/main.nil"
+target = "onuron"
+
+[dependencies]
+"nil/ui" = "^1.0.0"
+"nil/os" = "^1.0.0"
+"nil/fs" = "^1.0.0"
+"nil/sys" = "^1.0.0"
+"nil/softbus" = "^1.0.0"
+
+[build]
+out_dir = "dist"
+bundle_type = "nilax"
+apk_name = "onuron-terminal.apk"

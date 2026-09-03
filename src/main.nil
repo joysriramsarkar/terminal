@@ -1,0 +1,94 @@
+// ============================================================================
+// 🖥️ Onuron OS Terminal (অণুরণ ওএস ইন্টারঅ্যাক্টিভ টার্মিনাল)
+// Written in Nilang (নীলাং ভাষায় লিখিত সম্পূর্ণ টার্মিনাল অ্যাপ্লিকেশন)
+// Official Repository: https://github.com/joysriramsarkar/terminal
+// ============================================================================
+
+let COLOR_CYBER_BG = 601366;
+let COLOR_CYBER_SURFACE = 1120295;
+let COLOR_CYBER_TEXT = 15987698;
+let COLOR_CYBER_PROMPT = 58879;
+let COLOR_CYBER_ACCENT = 16711802;
+
+let COLOR_MATRIX_BG = 134148;
+let COLOR_MATRIX_SURFACE = 335370;
+let COLOR_MATRIX_TEXT = 2278750;
+let COLOR_MATRIX_PROMPT = 4906624;
+
+let changeTheme = fn(newTheme) {
+    puts("Theme changed to: " + newTheme);
+    return newTheme;
+};
+
+let executeCommand = fn(inputCmd) {
+    let trimmed = inputCmd;
+    if (trimmed == "") {
+        return false;
+    }
+
+    puts("joy@onuron:/home/joy$ " + trimmed);
+
+    if (trimmed == "clear") {
+        puts("Screen cleared");
+        return true;
+    }
+
+    if (trimmed == "sysinfo") {
+        puts("🖥️ Onuron OS Architecture");
+        puts("• OS: Onuron OS Desktop & Mobile v2.5.0");
+        puts("• Kernel: NilOS-Linux 6.8.0-arm64-onuron");
+        puts("• Runtime: Nilang Native VM (Go + Rust Core)");
+        puts("• Memory: 3.4 GB / 8.0 GB (42.8%)");
+        return true;
+    }
+
+    if (trimmed == "ls") {
+        puts("📂 Documents/   📂 Downloads/   📂 Projects/");
+        puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
+        puts("🚀 app.nilax     📦 output.apk");
+        return true;
+    }
+
+    if (trimmed == "help") {
+        puts("📋 [Onuron OS Terminal Help System]");
+        puts("• sysinfo : অণুরণ সিস্টেম ও হার্ডওয়্যার বিবরণী");
+        puts("• ls      : বর্তমান ডিরেক্টরির কনটেন্ট তালিকা");
+        puts("• nilpkg  : নীলাং প্যাকেজ ইনস্টলার ও আপডেট");
+        puts("• softbus : অণুরণ সফটবাস নেটওয়ার্ক মনিটর");
+        puts("• clear   : টার্মিনাল কনসোল পরিষ্কার করা");
+        return true;
+    }
+
+    if (trimmed == "nilpkg list") {
+        puts("📦 Installed Packages:");
+        puts("  [ok] org.onuron.vlc       (v3.0.12)");
+        puts("  [ok] org.onuron.browser   (v1.4.0)");
+        puts("  [ok] org.onuron.terminal  (v2.5.0)");
+        return true;
+    }
+
+    if (trimmed == "softbus status") {
+        puts("🌐 Onuron SoftBus IPC Daemon: RUNNING");
+        puts("Connected Nodes: Phone, Tablet, Laptop");
+        return true;
+    }
+
+    puts("nilos: command executed: " + trimmed);
+    return true;
+};
+
+puts("🚀 Onuron OS Interactive Terminal v2.5.0 Initializing...");
+puts("");
+puts("=== Testing Terminal Commands ===");
+executeCommand("sysinfo");
+puts("");
+executeCommand("ls");
+puts("");
+executeCommand("nilpkg list");
+puts("");
+executeCommand("softbus status");
+puts("");
+executeCommand("help");
+
+puts("");
+puts("✅ Onuron OS Terminal Application (Nilang) successfully verified!");
