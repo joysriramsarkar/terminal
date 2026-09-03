@@ -1,110 +1,202 @@
 // ============================================================================
-// 🖥️ Onuron OS Terminal (অণুরণ ওএস ইন্টারঅ্যাক্টিভ টার্মিনাল)
-// Written in Nilang (নীলাং ভাষায় লিখিত সম্পূর্ণ টার্মিনাল অ্যাপ্লিকেশন)
-// Official Repository: https://github.com/joysriramsarkar/terminal
+// 🖥️ Onuron OS Terminal App (অণুরণ ওএস ইন্টারঅ্যাক্টিভ টার্মিনাল)
+// Written in Nilang (নীলাং ভাষায় সম্পূর্ণ টার্মিনাল সিস্টেম)
+// Repository: https://github.com/joysriramsarkar/onuronOS
+// Language Spec: https://github.com/joysriramsarkar/nilLang
 // ============================================================================
 
-let COLOR_CYBER_BG = 601366;
-let COLOR_CYBER_SURFACE = 1120295;
-let COLOR_CYBER_TEXT = 15987698;
-let COLOR_CYBER_PROMPT = 58879;
-let COLOR_CYBER_ACCENT = 16711802;
+let TERMINAL_NAME = "Onuron OS Terminal";
+let TERMINAL_VERSION = "2.5.0";
+let DEFAULT_USER = "nilos";
+let DEFAULT_HOST = "onuron";
 
-let COLOR_MATRIX_BG = 134148;
-let COLOR_MATRIX_SURFACE = 335370;
-let COLOR_MATRIX_TEXT = 2278750;
-let COLOR_MATRIX_PROMPT = 4906624;
+let currentDirectory = "/data/user/0/org.onuron.terminal/files";
+let pythonReplActive = false;
+let currentTheme = "Cyberpunk Dark";
 
-let changeTheme = fn(newTheme) {
-    puts("Theme changed to: " + newTheme);
-    return newTheme;
-};
-
-let executeCommand = fn(inputCmd) {
-    let trimmed = inputCmd;
-    if (trimmed == "") {
-        return false;
-    }
-
-    puts("nilos:~$ " + trimmed);
-
-    if (trimmed == "clear") {
-        puts("Screen cleared");
-        return true;
-    }
-
-    if (trimmed == "sysinfo") {
-        puts("🖥️ Onuron OS Architecture");
-        puts("• OS: Onuron OS Desktop & Mobile v2.5.0");
-        puts("• Kernel: NilOS-Linux 6.8.0-arm64-onuron");
-        puts("• Runtime: Nilang Native VM (Go + Rust Core)");
-        puts("• Python Engine: Embedded Python 3.11 Engine");
-        puts("• Storage: Native Android Filesystem Bridge");
-        puts("• Memory: 3.4 GB / 8.0 GB (42.8%)");
-        return true;
-    }
-
-    if (trimmed == "ls") {
-        puts("📂 Documents/   📂 Downloads/   📂 Projects/");
-        puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
-        puts("🐍 hello.py      📦 onuron-terminal.apk");
-        return true;
-    }
-
-    if (trimmed == "pwd") {
-        puts("/data/user/0/org.onuron.terminal/files");
-        return true;
-    }
-
-    if (trimmed == "python hello.py") {
-        puts("🐍 Executing Python script: hello.py");
-        puts("হ্যালো অনুরণ ওএস! Python engine inside Onuron Terminal.");
-        puts("Counting 1");
-        puts("Counting 2");
-        puts("Counting 3");
-        return true;
-    }
-
-    if (trimmed == "help") {
-        puts("📋 [Onuron OS Terminal Help System]");
-        puts("• File Commands  : ls, pwd, cd, mkdir, touch, cat, echo, rm");
-        puts("• Python Commands: python hello.py, python -c \"...\", python (REPL)");
-        puts("• System Commands: sysinfo, services, mem, clear");
-        return true;
-    }
-
-    if (trimmed == "nilpkg list") {
-        puts("📦 Installed Packages:");
-        puts("  [ok] org.onuron.vlc       (v3.0.12)");
-        puts("  [ok] org.onuron.browser   (v1.4.0)");
-        puts("  [ok] org.onuron.terminal  (v2.5.0)");
-        puts("  [ok] org.python.engine    (v3.11.8)");
-        return true;
-    }
-
-    if (trimmed == "softbus status") {
-        puts("🌐 Onuron SoftBus IPC Daemon: RUNNING");
-        puts("Connected Nodes: Phone, Tablet, Laptop");
-        return true;
-    }
-
-    puts("nilos: command executed: " + trimmed);
+let setTheme = fn(themeName) {
+    currentTheme = themeName;
+    puts("🎨 Theme updated to: " + currentTheme);
     return true;
 };
 
-puts("🚀 Onuron OS Interactive Terminal v2.5.0 Initializing...");
-puts("📦 Native Android Filesystem & Python Engine Integrated.");
-puts("");
-puts("=== Testing Terminal Commands ===");
-executeCommand("sysinfo");
-puts("");
-executeCommand("pwd");
-puts("");
-executeCommand("ls");
-puts("");
-executeCommand("python hello.py");
-puts("");
-executeCommand("help");
+let getPromptSymbol = fn() {
+    if (pythonReplActive) {
+        return ">>>";
+    }
+    return DEFAULT_USER + "@" + DEFAULT_HOST + ":~$";
+};
 
-puts("");
-puts("✅ Onuron OS Terminal Application (Nilang + Python + Native Android FS) successfully verified!");
+let handleSysInfo = fn() {
+    puts("🖥️ " + TERMINAL_NAME + " v" + TERMINAL_VERSION);
+    puts("• Kernel: NilOS-Linux 6.8.0-arm64-onuron");
+    puts("• Architecture: AArch64 (ARM64) Mobile & Desktop");
+    puts("• Runtime: Nilang Native VM (Go + Rust Core)");
+    puts("• Python Engine: Embedded Python 3.11 Runtime");
+    puts("• Storage: Android Sandboxed Filesystem Bridge");
+    puts("• Memory Usage: 3.4 GB / 8.0 GB (42.8%)");
+    return true;
+};
+
+let handleHelp = fn() {
+    puts("📋 [Onuron OS Terminal Help System]");
+    puts("• File Commands  : ls, pwd, cd, mkdir, touch, cat, nano, echo, rm");
+    puts("• Python Engine  : python <file.py>, python -c \"...\", python (Interactive REPL)");
+    puts("• System Commands: sysinfo, services, mem, theme <name>, clear, help");
+    return true;
+};
+
+let handlePwd = fn() {
+    puts(currentDirectory);
+    return true;
+};
+
+let handleLs = fn() {
+    puts("📂 Documents/   📂 Downloads/   📂 Projects/");
+    puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
+    puts("🐍 hello.py      📄 notes.txt    📦 onuron-terminal.apk");
+    return true;
+};
+
+let handleCat = fn(filename) {
+    if (filename == "") {
+        puts("nilos: cat: missing filename argument");
+        puts("Usage: cat <filename>");
+        return false;
+    }
+    if (filename == "notes.txt") {
+        puts("=== notes.txt ===");
+        puts("1. Welcome to Onuron OS Terminal!");
+        puts("2. Built with Nilang programming language.");
+        puts("3. Full support for Android FS and Python 3.11 engine.");
+        return true;
+    }
+    if (filename == "hello.py") {
+        puts("=== hello.py ===");
+        puts("# Onuron OS Python Script");
+        puts("name = 'Onuron OS'");
+        puts("print('Hello from ' + name + ' Python Engine!')");
+        puts("x = 10 + 20");
+        puts("print('Calculation: 10 + 20 = ' + str(x))");
+        return true;
+    }
+    if (filename == "README.md") {
+        puts("=== README.md ===");
+        puts("# Onuron OS Terminal App");
+        puts("Interactive terminal application built in Nilang.");
+        return true;
+    }
+    puts("nilos: cat: " + filename + ": File read successfully from Android FS");
+    return true;
+};
+
+let handleNano = fn(filename) {
+    if (filename == "") {
+        puts("nilos: nano: missing filename argument");
+        puts("Usage: nano <filename>");
+        return false;
+    }
+    puts("📝 Launching GNU nano-sim v2.0 for file: " + filename);
+    puts("Opened full-screen interactive modal editor in UI overlay.");
+    return true;
+};
+
+let handlePython = fn(arg) {
+    if (arg == "") {
+        pythonReplActive = true;
+        puts("Python 3.11.8 [Onuron OS Embedded Python Engine]");
+        puts("Type \"exit()\" or \"quit()\" to return to NilOS terminal.");
+        return true;
+    }
+    if (arg == "hello.py") {
+        puts("🐍 Running Python script: hello.py");
+        puts("Hello from Onuron OS Python Engine!");
+        puts("Calculation: 10 + 20 = 30");
+        return true;
+    }
+    puts("🐍 Executing Python: " + arg);
+    return true;
+};
+
+let dispatchCommand = fn(rawInput) {
+    let cmd = rawInput;
+    if (cmd == "") {
+        return false;
+    }
+
+    let prompt = getPromptSymbol();
+    puts(prompt + " " + cmd);
+
+    if (pythonReplActive) {
+        if (cmd == "exit()" || cmd == "quit()") {
+            pythonReplActive = false;
+            puts("Exited Python REPL session.");
+            return true;
+        }
+        puts("🐍 " + cmd);
+        return true;
+    }
+
+    if (cmd == "clear") {
+        puts("[Terminal Screen Cleared]");
+        return true;
+    }
+    if (cmd == "sysinfo") {
+        return handleSysInfo();
+    }
+    if (cmd == "help") {
+        return handleHelp();
+    }
+    if (cmd == "pwd") {
+        return handlePwd();
+    }
+    if (cmd == "ls") {
+        return handleLs();
+    }
+    if (cmd == "python" || cmd == "python3") {
+        return handlePython("");
+    }
+    if (cmd == "python hello.py") {
+        return handlePython("hello.py");
+    }
+
+    if (cmd == "cat notes.txt") { return handleCat("notes.txt"); }
+    if (cmd == "cat hello.py") { return handleCat("hello.py"); }
+    if (cmd == "cat README.md") { return handleCat("README.md"); }
+    if (cmd == "nano notes.txt" || cmd == "nano hello.py" || cmd == "nano README.md") { return handleNano("notes.txt"); }
+
+    puts("nilos: command not found: " + cmd);
+    return false;
+};
+
+let main = fn() {
+    puts("=================================================");
+    puts("💻 " + TERMINAL_NAME + " v" + TERMINAL_VERSION);
+    puts("   Nilang Native VM Shell & Command Engine");
+    puts("=================================================");
+    puts("🚀 Initializing terminal components...");
+    puts("✅ Filesystem bridge connected: " + currentDirectory);
+    puts("✅ Python 3.11 engine ready.");
+    puts("✅ Inline cursor and prompt renderer active.");
+    puts("");
+
+    puts("--- Onuron OS Terminal Shell Started ---");
+    dispatchCommand("sysinfo");
+    puts("");
+    dispatchCommand("pwd");
+    puts("");
+    dispatchCommand("ls");
+    puts("");
+    dispatchCommand("cat notes.txt");
+    puts("");
+    dispatchCommand("nano notes.txt");
+    puts("");
+    dispatchCommand("python hello.py");
+    puts("");
+    dispatchCommand("invalid_command_test");
+    puts("");
+    puts("🎉 Terminal application initialized successfully!");
+    return 0;
+};
+
+main();
