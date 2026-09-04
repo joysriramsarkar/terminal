@@ -1,0 +1,26 @@
+{
+  "name": "onuron-terminal",
+  "version": "1.0.0",
+  "author": "Joysriram Sarkar <joy@onuron.org>",
+  "description": "অণুরণ ওএস-এর অফিসিয়াল নীলাং ইন্টারঅ্যাক্টিভ টার্মিনাল অ্যাপ (Onuron OS Terminal App)",
+  "entry": "src/main.nil",
+  "profile": "os",
+  "capabilities": [
+    "Filesystem"
+  ],
+  "targets": [
+    "onuron",
+    "android",
+    "ios",
+    "linux"
+  ],
+  "build": {
+    "output_dir": "dist",
+    "optimize": true
+  },
+  "scripts": {
+    "build": "nil build",
+    "dev": "nil run src/main.nil",
+    "start": "nil run"
+  }
+}
