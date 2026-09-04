@@ -1,0 +1,18 @@
+// ============================================================================
+// 📑 Multi-Tab TTY Session Manager Module
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let createSessionTab = fn(tabId, tabName) {
+    return {
+        "id": tabId,
+        "name": tabName,
+        "cwd": "/data/user/0/org.onuron.terminal/files",
+        "active": true
+    };
+};
+
+let switchTab = fn(currentTabs, activeId) {
+    puts("🔄 Switched session active tab to: " + activeId);
+    return activeId;
+};

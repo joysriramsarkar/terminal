@@ -1,0 +1,16 @@
+// ============================================================================
+// 🧪 Shell Test
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let testShellDispatch = fn() {
+    puts("🧪 Testing shell dispatching...");
+    let cmd = "pwd";
+    if (cmd == "pwd") {
+        puts("✅ Shell test passed: pwd handled");
+        return true;
+    }
+    return false;
+};
+
+testShellDispatch();

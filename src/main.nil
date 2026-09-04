@@ -1,14 +1,13 @@
 // ============================================================================
-// 🖥️ Onuron OS Terminal App (অণুরণ ওএস ইন্টারঅ্যাক্টিভ টার্মিনাল)
+// 🖥️ Onuron OS Terminal Main Application Entry
 // Written in Nilang (নীলাং ভাষায় সম্পূর্ণ টার্মিনাল সিস্টেম)
 // Repository: https://github.com/joysriramsarkar/onuronOS
 // Language Spec: https://github.com/joysriramsarkar/nilLang
 // ============================================================================
 
-let TERMINAL_NAME = "Onuron OS Terminal";
+let TERMINAL_NAME = "Onuron OS Terminal CLI";
 let TERMINAL_VERSION = "2.5.0";
 let DEFAULT_USER = "nilos";
-let DEFAULT_HOST = "onuron";
 
 let currentDirectory = "/data/user/0/org.onuron.terminal/files";
 let pythonReplActive = false;
@@ -34,7 +33,7 @@ let handleSysInfo = fn() {
     puts("• Kernel: NilOS-Linux 6.8.0-arm64-onuron");
     puts("• Architecture: AArch64 (ARM64) Mobile & Desktop");
     puts("• Runtime: Nilang Native VM (Go + Rust Core)");
-    puts("• Python Engine: Embedded Python 3.11 Runtime (Indented Block & Single-Line Loop Engine Active)");
+    puts("• Python Engine: Embedded Python 3.11 Runtime (Indented Block & REPL Engine Active)");
     puts("• Session Manager: Multi-Tab Support Enabled (tty1, tty2, ...)");
     puts("• Storage: Android Sandboxed Filesystem Bridge (" + currentDirectory + ")");
     return true;
@@ -87,7 +86,7 @@ let main = fn() {
     puts("💻 " + TERMINAL_NAME + " v" + TERMINAL_VERSION);
     puts("   Multi-Tab Shell & Indented Python Engine");
     puts("=================================================");
-    puts("🚀 Initializing terminal components...");
+    puts("🚀 Initializing Nilang terminal modules (parser, filesystem, process, python, tabs, terminal)...");
     puts("✅ Filesystem bridge connected: " + currentDirectory);
     puts("✅ Single-line & Indented Python execution engine ready.");
     puts("✅ Multi-Tab session manager active.");

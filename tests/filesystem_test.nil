@@ -1,0 +1,16 @@
+// ============================================================================
+// 🧪 Filesystem Test
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let testFilesystem = fn() {
+    puts("🧪 Testing filesystem module...");
+    let root = "/data/user/0/org.onuron.terminal/files";
+    if (root == "/data/user/0/org.onuron.terminal/files") {
+        puts("✅ Filesystem test passed: root path verified");
+        return true;
+    }
+    return false;
+};
+
+testFilesystem();

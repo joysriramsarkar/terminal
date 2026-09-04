@@ -1,0 +1,18 @@
+// ============================================================================
+// 🖥️ Terminal Renderer & Softbus UI Module
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let renderHeader = fn(title, version) {
+    puts("=================================================");
+    puts("💻 " + title + " v" + version);
+    puts("   Multi-Tab Shell & Indented Python Engine");
+    puts("=================================================");
+};
+
+let renderPrompt = fn(user, path, isPython) {
+    if (isPython) {
+        return ">>>";
+    }
+    return user + ":" + path + "$";
+};

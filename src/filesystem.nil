@@ -1,0 +1,33 @@
+// ============================================================================
+// 📂 Filesystem Module (Onuron OS Storage & File Operations)
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let DEFAULT_ROOT = "/data/user/0/org.onuron.terminal/files";
+
+let normalizePath = fn(currentDir, targetPath) {
+    if (targetPath == "~" || targetPath == "") {
+        return DEFAULT_ROOT;
+    }
+    if (targetPath == "..") {
+        return DEFAULT_ROOT;
+    }
+    if (targetPath == ".") {
+        return currentDir;
+    }
+    return currentDir + "/" + targetPath;
+};
+
+let formatPromptPath = fn(currentDir) {
+    if (currentDir == DEFAULT_ROOT) {
+        return "~";
+    }
+    return currentDir;
+};
+
+let listDirectory = fn(path) {
+    puts("📂 Documents/   📂 Downloads/   📂 Projects/");
+    puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
+    puts("🐍 script.py     🐍 hello.py     📦 onuron-terminal.apk");
+    return true;
+};

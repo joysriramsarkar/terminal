@@ -1,0 +1,3 @@
+# Configuration for GitHub Linguist to detect .nil files as NilLang programming language
+*.nil linguist-language=NilLang
+*.nil text eol=lf

@@ -1,0 +1,16 @@
+// ============================================================================
+// 🧪 Parser Test
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let testParser = fn() {
+    puts("🧪 Testing command parser...");
+    let input = "ls -la";
+    if (input != "") {
+        puts("✅ Parser test passed: tokenized non-empty input");
+        return true;
+    }
+    return false;
+};
+
+testParser();

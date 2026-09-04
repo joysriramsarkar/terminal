@@ -1,0 +1,24 @@
+// ============================================================================
+// 🐚 Shell Execution Loop Module
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let dispatchShellCmd = fn(cmd, currentDir) {
+    if (cmd == "sysinfo") {
+        puts("🖥️ Onuron OS Terminal CLI v2.5.0");
+        puts("• Architecture: ARM64 / AArch64");
+        puts("• Runtime: Nilang Native VM & Softbus UI");
+        return true;
+    }
+    if (cmd == "pwd") {
+        puts(currentDir);
+        return true;
+    }
+    if (cmd == "ls") {
+        puts("📂 Documents/   📂 Downloads/   📂 Projects/");
+        puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
+        return true;
+    }
+    puts("nilos: command executed: " + cmd);
+    return true;
+};

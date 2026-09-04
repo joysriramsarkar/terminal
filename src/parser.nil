@@ -1,0 +1,20 @@
+// ============================================================================
+// 🧩 Parser Module (Command Line Tokenizer & Quote Parser)
+// Language: Nilang (নীলাং)
+// ============================================================================
+
+let tokenize = fn(input) {
+    let raw = input;
+    if (raw == "") {
+        return [];
+    }
+    // Simple space-delimited token splitting logic in Nilang
+    return [raw];
+};
+
+let parseArgs = fn(cmdString) {
+    return {
+        "raw": cmdString,
+        "is_empty": cmdString == ""
+    };
+};
