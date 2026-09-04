@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // 🖥️ Onuron OS Terminal Main Application Entry
 // Written in Nilang (নীলাং ভাষায় সম্পূর্ণ টার্মিনাল সিস্টেম)
 // Repository: https://github.com/joysriramsarkar/onuronOS
@@ -22,10 +22,10 @@ let formatPromptPath = fn(path) {
 
 let getPromptSymbol = fn() {
     if (pythonReplActive) {
-        return ">>>";
+        return ">>> ";
     }
     let displayPath = formatPromptPath(currentDirectory);
-    return DEFAULT_USER + ":" + displayPath + "$";
+    return DEFAULT_USER + ":" + displayPath + "$ ";
 };
 
 let handleSysInfo = fn() {
@@ -41,34 +41,73 @@ let handleSysInfo = fn() {
 
 let handleHelp = fn() {
     puts("📋 [Onuron OS Terminal Help System]");
-    puts("• Multi-Tab      : Click '+' to create new terminal session tab (tty1, tty2, ...)");
-    puts("• File Commands  : ls, pwd, cd, mkdir, touch, cat, nano, echo, rm");
-    puts("• Python Engine  : Supports single-line & indented scripts (for i in range(...): print(i))");
-    puts("• System Commands: sysinfo, services, mem, clear, help");
+    puts("  • ls, ls -la     : List directory files & folders");
+    puts("  • pwd            : Print current working directory");
+    puts("  • cd <folder>    : Change directory (e.g. cd Documents, cd .., cd ~)");
+    puts("  • mkdir <folder> : Create new directory");
+    puts("  • touch <file>   : Create empty file");
+    puts("  • cat <file>     : Read and print file contents");
+    puts("  • echo <text>    : Display text in terminal");
+    puts("  • rm <file>      : Remove file or directory");
+    puts("  • python         : Launch interactive Python 3.11 REPL (type 'exit()' to return)");
+    puts("  • python <file>  : Execute Python script file");
+    puts("  • sysinfo        : Display system architecture & hardware info");
+    puts("  • services       : List active Onuron OS system daemons");
+    puts("  • mem            : Display memory usage statistics");
+    puts("  • tabs           : List active terminal tabs");
+    puts("  • tab new / +    : Create and switch to new tab");
+    puts("  • clear          : Clear terminal screen");
+    puts("  • exit / quit    : Close and exit terminal");
     return true;
 };
 
 let dispatchCommand = fn(rawInput) {
-    let cmd = rawInput;
+    let cmd = trim(rawInput);
     if (cmd == "") {
         return false;
     }
 
-    let prompt = getPromptSymbol();
-    puts("[" + activeTabName + "] " + prompt + " " + cmd);
-
-    if (cmd == "sysinfo") { return handleSysInfo(); }
-    if (cmd == "help") { return handleHelp(); }
-    if (cmd == "pwd") { puts(currentDirectory); return true; }
-    if (cmd == "ls") {
-        puts("📂 Documents/   📂 Downloads/   📂 Projects/");
-        puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
-        puts("🐍 script.py     🐍 hello.py     📦 onuron-terminal.apk");
+    if (pythonReplActive) {
+        if (cmd == "exit" || cmd == "exit()" || cmd == "quit" || cmd == "quit()") {
+            pythonReplActive = false;
+            puts("👋 Exited Python REPL mode.");
+            return true;
+        }
+        puts("🐍 Python 3.11: Evaluated -> " + cmd);
         return true;
     }
 
-    if (cmd == "python script.py") {
-        puts("🐍 Executing Python script.py:");
+    let lowerCmd = lower(cmd);
+
+    if (lowerCmd == "sysinfo") { return handleSysInfo(); }
+    if (lowerCmd == "help") { return handleHelp(); }
+    if (lowerCmd == "pwd") { puts(currentDirectory); return true; }
+    if (lowerCmd == "clear") { clear(); return true; }
+
+    if (lowerCmd == "services") {
+        puts("⚙️ Onuron OS Active Services & Daemons:");
+        puts("  • softbusd.service        [active / running]");
+        puts("  • nilpkg-server.service   [active / listening on :8080]");
+        puts("  • compositor.service      [active / direct-rendering]");
+        puts("  • netd.service            [idle]");
+        return true;
+    }
+
+    if (lowerCmd == "mem") {
+        puts("💾 Memory Status: Total: 8192 MB | Used: 2140 MB | Free: 6052 MB");
+        return true;
+    }
+
+    if (lowerCmd == "python") {
+        pythonReplActive = true;
+        puts("🐍 Entering Embedded Python 3.11 REPL mode.");
+        puts("💡 Type Python code or 'exit()' to return to shell.");
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "python ")) {
+        let scriptName = trim(substr(cmd, 7));
+        puts("🐍 Executing Python script: " + scriptName);
         puts("Loop index: 0");
         puts("Loop index: 1");
         puts("Loop index: 2");
@@ -77,7 +116,89 @@ let dispatchCommand = fn(rawInput) {
         return true;
     }
 
-    puts("nilos: command not found: " + cmd);
+    if (lowerCmd == "ls" || lowerCmd == "ls -la" || lowerCmd == "ls -l") {
+        puts("📂 Documents/   📂 Downloads/   📂 Projects/");
+        puts("📄 nil.toml      📄 README.md    ⚙️ config.json");
+        puts("🐍 script.py     🐍 hello.py     📦 onuron-terminal.apk");
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "cd ")) {
+        let target = trim(substr(cmd, 3));
+        if (target == ".." || target == "/") {
+            currentDirectory = "/data/user/0/org.onuron.terminal/files";
+        } else if (target == "~") {
+            currentDirectory = "/data/user/0/org.onuron.terminal/files";
+        } else {
+            currentDirectory = "/data/user/0/org.onuron.terminal/files/" + target;
+        }
+        puts("📂 " + currentDirectory);
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "mkdir ")) {
+        let dirName = trim(substr(cmd, 6));
+        puts("📁 Created directory: " + dirName);
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "touch ")) {
+        let fileName = trim(substr(cmd, 6));
+        puts("📄 Created file: " + fileName);
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "cat ")) {
+        let fileName = trim(substr(cmd, 4));
+        if (fileName == "README.md") {
+            puts("# Onuron OS Terminal (অণুরণ ওএস টার্মিনাল) 🖥️📱");
+            puts("Nilang-based native terminal for Onuron OS & Android.");
+        } else if (fileName == "script.py") {
+            puts("for i in range(5):");
+            puts("    print(f'Loop index: {i}')");
+        } else if (fileName == "hello.py") {
+            puts("print('Hello from Onuron OS Python Engine!')");
+        } else if (fileName == "nil.toml") {
+            puts("[package]\nname = \"onuron-terminal\"\nversion = \"1.0.0\"");
+        } else {
+            puts("📄 Content of " + fileName + ": (empty file)");
+        }
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "echo ")) {
+        let text = trim(substr(cmd, 5));
+        puts(text);
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "rm ")) {
+        let target = trim(substr(cmd, 3));
+        puts("🗑️ Removed: " + target);
+        return true;
+    }
+
+    if (lowerCmd == "tabs") {
+        puts("📑 Active Session Tabs:");
+        puts("  • [1] tty1 (active)");
+        puts("  • [2] tty2");
+        return true;
+    }
+
+    if (lowerCmd == "tab new" || lowerCmd == "+") {
+        activeTabName = "tty2";
+        puts("✨ Created and switched to new tab: " + activeTabName);
+        return true;
+    }
+
+    if (hasPrefix(lowerCmd, "tab ")) {
+        let tab = trim(substr(cmd, 4));
+        activeTabName = tab;
+        puts("🔄 Switched session active tab to: " + activeTabName);
+        return true;
+    }
+
+    puts("nilos: command not found: " + cmd + " (type 'help' for available commands)");
     return false;
 };
 
@@ -86,24 +207,32 @@ let main = fn() {
     puts("💻 " + TERMINAL_NAME + " v" + TERMINAL_VERSION);
     puts("   Multi-Tab Shell & Indented Python Engine");
     puts("=================================================");
-    puts("🚀 Initializing Nilang terminal modules (parser, filesystem, process, python, tabs, terminal)...");
-    puts("✅ Filesystem bridge connected: " + currentDirectory);
-    puts("✅ Single-line & Indented Python execution engine ready.");
-    puts("✅ Multi-Tab session manager active.");
-    puts("");
+    puts("🚀 Connected: " + currentDirectory);
+    puts("💡 Type 'help' for available commands, 'exit' to quit.\n");
 
-    puts("--- Onuron OS Terminal Diagnostic Verification ---");
-    dispatchCommand("sysinfo");
-    puts("");
-    dispatchCommand("pwd");
-    puts("");
-    dispatchCommand("ls");
-    puts("");
-    dispatchCommand("python script.py");
-    puts("");
-    dispatchCommand("help");
-    puts("");
-    puts("🎉 Terminal application initialized successfully!");
+    let running = true;
+    while (running) {
+        let p = "[" + activeTabName + "] " + getPromptSymbol();
+        let raw = input(p);
+        if (raw == null) {
+            running = false;
+        } else {
+            let line = trim(raw);
+            if (line != "") {
+                if (line == "exit" || line == "quit") {
+                    if (pythonReplActive) {
+                        pythonReplActive = false;
+                        puts("👋 Exited Python REPL mode.");
+                    } else {
+                        puts("👋 Exiting Onuron Terminal. Goodbye!");
+                        running = false;
+                    }
+                } else {
+                    dispatchCommand(line);
+                }
+            }
+        }
+    }
     return 0;
 };
 
